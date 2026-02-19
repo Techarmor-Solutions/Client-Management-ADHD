@@ -2,6 +2,7 @@ import type { Task, Client, TaskStatus } from '../../types';
 import { PriorityBadge, RecurrenceBadge } from '../shared/Badge';
 import { ColorDot } from '../shared/ColorDot';
 import { formatDate, isOverdue, isToday } from '../../utils/dateUtils';
+import { resolveColor } from '../../utils/colorUtils';
 import { TASK_STATUS_OPTIONS } from '../../constants';
 
 interface TaskRowProps {
@@ -26,9 +27,12 @@ export function TaskRow({ task, client, onComplete, onEdit, onDelete, onStatusCh
 
   const currentStatusColor = TASK_STATUS_OPTIONS.find(o => o.value === task.status)?.color ?? 'bg-gray-100 text-gray-500';
 
+  const clientColor = client ? resolveColor(client.color) : undefined;
+
   return (
     <div
       className={`flex items-center gap-3 px-4 py-3 rounded-xl border transition-all ${rowBg} ${task.done ? 'opacity-50' : ''}`}
+      style={clientColor ? { borderLeftWidth: '4px', borderLeftColor: clientColor } : undefined}
     >
       {/* Checkbox */}
       <button

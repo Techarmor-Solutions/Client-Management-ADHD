@@ -27,7 +27,7 @@ export function useClients() {
         monthly_revenue: newClient.monthly_revenue ?? 0,
         total_revenue: newClient.total_revenue ?? 0,
         notes: newClient.notes ?? '',
-        color: newClient.color ?? 'slate',
+        color: newClient.color ?? '#4F7BF7',
       })
       .select()
       .single();
