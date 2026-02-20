@@ -46,9 +46,10 @@ export function ClientDetailView({
   const [editingTask, setEditingTask] = useState<Task | null>(null);
 
   const clientTasks = tasks.filter(t => t.client_id === client.id);
+  const clientProjects = projects.filter(p => p.client_id === client.id);
 
   const unassignedTasks = clientTasks.filter(
-    t => t.project_id === null || !projects.find(p => p.id === t.project_id)
+    t => t.project_id === null || !clientProjects.find(p => p.id === t.project_id)
   );
 
   const handleStatusChange = (id: string, status: TaskStatus) => {
@@ -90,7 +91,7 @@ export function ClientDetailView({
             <div className="bg-white border border-gray-100 rounded-2xl p-5">
               <ProjectSection
                 clientId={client.id}
-                projects={projects}
+                projects={clientProjects}
                 onAdd={onAddProject}
                 onUpdate={onUpdateProject}
                 onDelete={onDeleteProject}
@@ -102,7 +103,7 @@ export function ClientDetailView({
 
       {/* Tasks grouped by project */}
       <div className="max-w-3xl mx-auto w-full px-4 pb-4 flex flex-col gap-3">
-        {projects.map(project => (
+        {clientProjects.map(project => (
           <ProjectTaskGroup
             key={project.id}
             project={project}
@@ -117,7 +118,7 @@ export function ClientDetailView({
           />
         ))}
 
-        {(unassignedTasks.length > 0 || projects.length === 0) && (
+        {(unassignedTasks.length > 0 || clientProjects.length === 0) && (
           <ProjectTaskGroup
             project={null}
             tasks={unassignedTasks}
@@ -143,7 +144,7 @@ export function ClientDetailView({
         <TaskEditModal
           task={editingTask}
           clients={clients}
-          projects={projects}
+          projects={clientProjects}
           onSave={onUpdateTask}
           onDelete={onDeleteTask}
           onClose={() => setEditingTask(null)}
