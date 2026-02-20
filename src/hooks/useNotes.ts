@@ -18,13 +18,18 @@ export function useNotes() {
   }, []);
 
   const addNote = async (content: string): Promise<Note | null> => {
+    const { data: { user } } = await supabase.auth.getUser();
     const { data, error } = await supabase
       .from('notes')
-      .insert({ content })
+      .insert({ content, user_id: user?.id })
       .select()
       .single();
 
-    if (!error && data) {
+    if (error) {
+      console.error('Failed to save note:', error.message);
+      return null;
+    }
+    if (data) {
       setNotes(prev => [data as Note, ...prev]);
       return data as Note;
     }

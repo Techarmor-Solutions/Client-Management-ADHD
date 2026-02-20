@@ -13,6 +13,7 @@ interface NotesViewProps {
 export function NotesView({ notes, loading, onAdd, onUpdate, onDelete }: NotesViewProps) {
   const [draft, setDraft] = useState('');
   const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editContent, setEditContent] = useState('');
   const [search, setSearch] = useState('');
@@ -27,10 +28,15 @@ export function NotesView({ notes, loading, onAdd, onUpdate, onDelete }: NotesVi
     const text = draft.trim();
     if (!text) return;
     setSaving(true);
-    await onAdd(text);
-    setDraft('');
+    setSaveError(false);
+    const result = await onAdd(text);
     setSaving(false);
-    captureRef.current?.focus();
+    if (result) {
+      setDraft('');
+      captureRef.current?.focus();
+    } else {
+      setSaveError(true);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -73,13 +79,18 @@ export function NotesView({ notes, loading, onAdd, onUpdate, onDelete }: NotesVi
         />
         <div className="flex items-center justify-between px-4 pb-3">
           <span className="text-xs text-[#9E9D98]">{draft.length > 0 ? `${draft.length} chars` : ''}</span>
-          <button
-            onClick={handleSave}
-            disabled={!draft.trim() || saving}
-            className="px-4 py-1.5 text-sm font-medium bg-[#4F7BF7] text-white rounded-lg disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#3d6ae0] transition-colors"
-          >
-            {saving ? 'Saving…' : 'Save note'}
-          </button>
+          <div className="flex items-center gap-2">
+            {saveError && (
+              <span className="text-xs text-red-600">Failed to save — check console</span>
+            )}
+            <button
+              onClick={handleSave}
+              disabled={!draft.trim() || saving}
+              className="px-4 py-1.5 text-sm font-medium bg-[#4F7BF7] text-white rounded-lg disabled:opacity-40 disabled:cursor-not-allowed hover:bg-[#3d6ae0] transition-colors"
+            >
+              {saving ? 'Saving…' : 'Save note'}
+            </button>
+          </div>
         </div>
       </div>
 
