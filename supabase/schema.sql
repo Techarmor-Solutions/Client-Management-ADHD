@@ -69,3 +69,14 @@ CREATE POLICY "users own task_notes" ON task_notes FOR ALL USING (auth.uid() = u
 
 -- Planner: schedule tasks to specific work days (separate from due_date)
 ALTER TABLE tasks ADD COLUMN IF NOT EXISTS scheduled_date DATE;
+
+-- Notes: quick freeform capture, AI-searchable later
+CREATE TABLE IF NOT EXISTS notes (
+  id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id    UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
+  content    TEXT NOT NULL,
+  created_at TIMESTAMPTZ DEFAULT now(),
+  updated_at TIMESTAMPTZ DEFAULT now()
+);
+ALTER TABLE notes ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "users own notes" ON notes FOR ALL USING (auth.uid() = user_id);

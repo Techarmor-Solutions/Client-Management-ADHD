@@ -6,6 +6,8 @@ import { ClientListView } from '../clients/ClientListView';
 import { ClientDetailView } from '../clients/ClientDetailView';
 import { WeeklyReviewView } from '../review/WeeklyReviewView';
 import { WeekPlannerView } from '../planner/WeekPlannerView';
+import { NotesView } from '../notes/NotesView';
+import { useNotes } from '../../hooks/useNotes';
 import { useClients } from '../../hooks/useClients';
 import { useProjects } from '../../hooks/useProjects';
 import { useTasks } from '../../hooks/useTasks';
@@ -19,13 +21,14 @@ interface AppShellProps {
 export function AppShell({ onSignOut }: AppShellProps) {
   const [view, setView] = useState<AppView>(() => {
     const saved = localStorage.getItem(VIEW_STORAGE_KEY) as AppView | null;
-    return saved && ['tasks', 'clients', 'review', 'planner'].includes(saved) ? saved : 'tasks';
+    return saved && ['tasks', 'clients', 'review', 'planner', 'notes'].includes(saved) ? saved : 'tasks';
   });
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
 
   const { clients, loading: clientsLoading, addClient, updateClient, deleteClient } = useClients();
   const { projects, loading: projectsLoading, addProject, updateProject, deleteProject } = useProjects();
   const { tasks, loading: tasksLoading, addTask, updateTask, completeTask, uncompleteTask, deleteTask } = useTasks();
+  const { notes, loading: notesLoading, addNote, updateNote, deleteNote } = useNotes();
 
   // Persist view to localStorage (except client-detail — persist 'clients')
   useEffect(() => {
@@ -109,6 +112,16 @@ export function AppShell({ onSignOut }: AppShellProps) {
             onCompleteTask={completeTask}
             onUncompleteTask={uncompleteTask}
             onDeleteTask={deleteTask}
+          />
+        )}
+
+        {view === 'notes' && (
+          <NotesView
+            notes={notes}
+            loading={notesLoading}
+            onAdd={addNote}
+            onUpdate={updateNote}
+            onDelete={deleteNote}
           />
         )}
 

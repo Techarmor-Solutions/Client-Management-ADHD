@@ -10,6 +10,7 @@ const NAV_ITEMS: { view: AppView; label: string; icon: string }[] = [
   { view: 'tasks',   label: 'Tasks',         icon: '✓' },
   { view: 'clients', label: 'Clients',        icon: '👥' },
   { view: 'planner', label: 'Planner',        icon: '🗓' },
+  { view: 'notes',   label: 'Notes',          icon: '📝' },
   { view: 'review',  label: 'Weekly Review',  icon: '📅' },
 ];
 
