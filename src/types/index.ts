@@ -44,10 +44,11 @@ export interface Task {
   recurrence: Recurrence;
   completed_at: string | null;
   parent_task_id: string | null;
+  scheduled_date: string | null;
   created_at: string;
 }
 
-export type AppView = 'tasks' | 'clients' | 'client-detail' | 'review';
+export type AppView = 'tasks' | 'clients' | 'client-detail' | 'review' | 'planner';
 
 export interface NewTask {
   client_id: string;
@@ -58,6 +59,7 @@ export interface NewTask {
   recurrence?: Recurrence;
   status?: TaskStatus;
   parent_task_id?: string | null;
+  scheduled_date?: string | null;
 }
 
 export interface TaskNote {

@@ -32,6 +32,7 @@ export function useTasks() {
         recurrence: newTask.recurrence ?? 'none',
         completed_at: null,
         parent_task_id: newTask.parent_task_id ?? null,
+        scheduled_date: newTask.scheduled_date ?? null,
       })
       .select()
       .single();
@@ -45,7 +46,7 @@ export function useTasks() {
 
   const updateTask = async (
     id: string,
-    updates: Partial<Pick<Task, 'title' | 'due_date' | 'priority' | 'recurrence' | 'client_id' | 'project_id' | 'done' | 'status'>>
+    updates: Partial<Pick<Task, 'title' | 'due_date' | 'priority' | 'recurrence' | 'client_id' | 'project_id' | 'done' | 'status' | 'scheduled_date'>>
   ) => {
     setTasks(prev => prev.map(t => t.id === id ? { ...t, ...updates } : t));
     await supabase.from('tasks').update(updates).eq('id', id);

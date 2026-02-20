@@ -52,6 +52,29 @@ export function formatDateTime(isoString: string): string {
   }).replace(' AM', ' am').replace(' PM', ' pm');
 }
 
+/** Returns the Mon–Fri YYYY-MM-DD strings for the week offsetWeeks away from today */
+export function getWorkWeek(offsetWeeks = 0): string[] {
+  const today = new Date();
+  const day = today.getDay(); // 0=Sun, 1=Mon…
+  const diff = day === 0 ? -6 : 1 - day; // roll back to Monday
+  const monday = new Date(today);
+  monday.setDate(today.getDate() + diff + offsetWeeks * 7);
+  return Array.from({ length: 5 }, (_, i) => {
+    const d = new Date(monday);
+    d.setDate(monday.getDate() + i);
+    return d.toISOString().split('T')[0];
+  });
+}
+
+/** "Mon" + "Feb 24" for column header */
+export function formatDayHeader(dateStr: string): { weekday: string; date: string } {
+  const d = new Date(dateStr + 'T00:00:00');
+  return {
+    weekday: d.toLocaleDateString('en-US', { weekday: 'short' }),
+    date: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+  };
+}
+
 export function getWeekBounds(): { start: string; end: string } {
   const today = new Date();
   const start = today.toISOString().split('T')[0];

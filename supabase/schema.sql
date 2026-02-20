@@ -66,3 +66,6 @@ CREATE TABLE IF NOT EXISTS task_notes (
 );
 ALTER TABLE task_notes ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "users own task_notes" ON task_notes FOR ALL USING (auth.uid() = user_id);
+
+-- Planner: schedule tasks to specific work days (separate from due_date)
+ALTER TABLE tasks ADD COLUMN IF NOT EXISTS scheduled_date DATE;

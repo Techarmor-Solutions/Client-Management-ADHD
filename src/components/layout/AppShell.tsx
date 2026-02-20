@@ -5,6 +5,7 @@ import { TaskListView } from '../tasks/TaskListView';
 import { ClientListView } from '../clients/ClientListView';
 import { ClientDetailView } from '../clients/ClientDetailView';
 import { WeeklyReviewView } from '../review/WeeklyReviewView';
+import { WeekPlannerView } from '../planner/WeekPlannerView';
 import { useClients } from '../../hooks/useClients';
 import { useProjects } from '../../hooks/useProjects';
 import { useTasks } from '../../hooks/useTasks';
@@ -18,7 +19,7 @@ interface AppShellProps {
 export function AppShell({ onSignOut }: AppShellProps) {
   const [view, setView] = useState<AppView>(() => {
     const saved = localStorage.getItem(VIEW_STORAGE_KEY) as AppView | null;
-    return saved && ['tasks', 'clients', 'review'].includes(saved) ? saved : 'tasks';
+    return saved && ['tasks', 'clients', 'review', 'planner'].includes(saved) ? saved : 'tasks';
   });
   const [selectedClientId, setSelectedClientId] = useState<string | null>(null);
 
@@ -96,6 +97,18 @@ export function AppShell({ onSignOut }: AppShellProps) {
             onAddProject={addProject}
             onUpdateProject={updateProject}
             onDeleteProject={deleteProject}
+          />
+        )}
+
+        {view === 'planner' && (
+          <WeekPlannerView
+            tasks={tasks}
+            clients={clients}
+            projects={projects}
+            onUpdateTask={updateTask}
+            onCompleteTask={completeTask}
+            onUncompleteTask={uncompleteTask}
+            onDeleteTask={deleteTask}
           />
         )}
 
